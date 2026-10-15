@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="brand/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="brand/icon.svg">
+<link rel="apple-touch-icon" href="brand/apple-touch-icon.png">
+<meta name="theme-color" content="#1E3FAE">
+<title>Recorda Developer Console</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginView">
+  <div class="login-card">
+    <img src="brand/logo.svg" alt="Recorda" class="brand-logo" style="margin-bottom:16px;">
+    <span class="badge-dev">DEVELOPER CONSOLE</span>
+    <h1>Sign in</h1>
+    <p>Sign in with your developer account.</p>
+    <form id="loginForm">
+      <div class="field"><label for="email">Email</label><input type="email" id="email" autocomplete="email" required></div>
+      <div class="field"><label for="pw">Password</label><input type="password" id="pw" autocomplete="current-password" required></div>
+      <button class="btn block" id="loginBtn" type="submit">Sign in</button>
+      <div class="err" id="loginErr"></div>
+    </form>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="shell hidden" id="appView">
+  <aside class="side">
+    <div class="brand"><img src="brand/logo-white.svg" alt="Recorda" class="brand-logo"></div>
+    <div class="tag">DEVELOPER CONSOLE</div>
+    <nav class="nav" id="nav">
+      <a href="#overview" data-tab="overview" class="active">Overview</a>
+      <a href="#businesses" data-tab="businesses">Businesses</a>
+      <a href="#users" data-tab="users">Users</a>
+      <a href="#errors" data-tab="errors">Errors <span class="pill hidden" id="errPill">0</span></a>
+      <a href="#audit" data-tab="audit">Audit log</a>
+    </nav>
+    <div class="side-foot">
+      <div class="who" id="who"></div>
+      <button class="btn sec sm" id="logoutBtn">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="top">
+      <div><h1 id="title">Overview</h1><div class="sub" id="subtitle"></div></div>
+      <div class="tools">
+        <span id="updated"></span>
+        <label><input type="checkbox" id="auto" checked> Auto-refresh (60s)</label>
+        <button class="btn sec sm" id="refreshBtn">Refresh</button>
+      </div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section id="tab-overview">
+      <div class="grid kpis" id="kpis"></div>
+      <div class="grid two">
+        <div class="panel">
+          <h2>Sales volume <select id="range" style="width:auto;padding:5px 8px;font-size:12.5px"><option value="7">7 days</option><option value="30" selected>30 days</option><option value="90">90 days</option></select></h2>
+          <div class="bars" id="chartSales"></div><div class="axis" id="axisSales"></div>
+          <div class="sub2" style="margin-top:8px" id="salesNote"></div>
+        </div>
+        <div class="panel">
+          <h2>New signups &amp; businesses</h2>
+          <div class="bars" id="chartSignups"></div><div class="axis" id="axisSignups"></div>
+          <div class="legend" style="margin-top:8px"><span><i style="background:var(--blue)"></i>Signups</span></div>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="panel"><h2>Plans</h2><div class="planbar" id="planbar"></div><div class="legend" id="planLegend"></div>
+          <h2 style="margin-top:22px">System health</h2><div id="health"></div></div>
+        <div class="panel"><h2>Recent activity</h2><div class="feed" id="feed"></div></div>
+      </div>
+    </section>
+
+    <!-- BUSINESSES -->
+    <section id="tab-businesses" class="hidden">
+      <div class="toolbar">
+        <input type="search" id="bizSearch" placeholder="Search name, owner, email…">
+        <select id="bizFilter"><option value="all">All businesses</option><option value="active">Active (sale in 30d)</option><option value="inactive">Inactive</option><option value="suspended">Suspended</option><option value="free">Free plan</option><option value="pro">Pro plan</option><option value="business">Business plan</option></select>
+        <button class="btn sec sm" id="bizCsv">Export CSV</button>
+      </div>
+      <div class="tablebox"><table><thead><tr>
+        <th>Business</th><th>Owner</th><th>Plan</th><th>Members</th><th>Customers</th><th>Products</th><th>Sales</th><th>Volume</th><th>Last sale</th><th>Created</th><th>Status</th><th></th>
+      </tr></thead><tbody id="bizBody"></tbody></table></div>
+    </section>
+
+    <!-- USERS -->
+    <section id="tab-users" class="hidden">
+      <div class="toolbar">
+        <input type="search" id="userSearch" placeholder="Search name, email, phone…">
+        <select id="userFilter"><option value="all">All users</option><option value="unconfirmed">Unconfirmed email</option><option value="nobiz">No business yet</option><option value="admins">Admins</option></select>
+        <button class="btn sec sm" id="userCsv">Export CSV</button>
+      </div>
+      <div class="tablebox"><table><thead><tr>
+        <th>User</th><th>Phone</th><th>Businesses</th><th>Email</th><th>Last sign-in</th><th>Joined</th>
+      </tr></thead><tbody id="userBody"></tbody></table></div>
+    </section>
+
+    <!-- ERRORS -->
+    <section id="tab-errors" class="hidden">
+      <div class="toolbar"><button class="btn danger sm" id="clearErrors">Clear all errors</button></div>
+      <div class="tablebox"><div id="errList"></div></div>
+    </section>
+
+    <!-- AUDIT -->
+    <section id="tab-audit" class="hidden">
+      <div class="tablebox"><table><thead><tr><th>When</th><th>Admin</th><th>Action</th><th>Target</th><th>Details</th></tr></thead><tbody id="auditBody"></tbody></table></div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
